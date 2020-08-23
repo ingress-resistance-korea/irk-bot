@@ -1,0 +1,13 @@
+version: '2'
+services:
+  irk-event-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    container_name: irk-env-worker
+    volumes:
+      - ./screenshots:/app/screenshots
+      - ./logs:/app/logs
+    environment:
+      - ENV=production

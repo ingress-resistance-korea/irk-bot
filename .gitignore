@@ -1,3 +1,13 @@
+# server
+screenshots
+logs
+src/config/settings_dev.py
+src/config/settings_prod.py
+src/config/settings.py
+
+# pycharm
+.idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
