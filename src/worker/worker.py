@@ -24,9 +24,3 @@ class Worker:
                 request['is_success'] = is_success
                 request['text'] = text
                 self.queue.rpush(INTEL_RESPONSE, json.dumps(request))
-
-    @staticmethod
-    def process_intel(body, message):
-        print(body)
-        print(message)
-        message.ack()
