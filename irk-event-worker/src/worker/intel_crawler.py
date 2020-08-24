@@ -18,17 +18,17 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
     if not chrome.check_lock():
         lock_id = uuid4()
         if not (chrome.lock(lock_id=lock_id)):
-            text = '`%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요`' % chrome.locked_at
+            text = '%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요' % chrome.locked_at
             return False, text
     else:
-        text = '`%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요`' % chrome.locked_at
+        text = '%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요' % chrome.locked_at
         return False, text
 
     # get response
     logger.info('[%s] Getting Geolocation...' % (time.time() - start_time))
     data = get_location(search_key)
     if not len(data['results']):
-        text = '`구글에 주소 데이터가 없습니다.`'
+        text = '구글에 주소 데이터가 없습니다.'
         chrome.unlock()
         return False, text
 
@@ -37,12 +37,12 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
         logger.info('[%s] Finding Address...' % (time.time() - start_time))
         address = data['results'][0]['formatted_address']
         message = '%s\n' \
-                  '`%s`' % (address, str(now))
+                  '%s' % (address, str(now))
     except Exception as e:
         logger.info(e)
         logger.info(data)
-        text = '`주소를 불러오는데 실패했습니다.`\n' \
-               '>%s' % search_key
+        text = '주소를 불러오는데 실패했습니다.\n' \
+               '%s' % search_key
         chrome.unlock()
         return False, text
 
@@ -58,8 +58,8 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
     except Exception as e:
         logger.info(e)
         logger.info(data)
-        text = '`좌표를 불러오는데 실패했습니다.`\n' \
-               '>%s' % address
+        text = '좌표를 불러오는데 실패했습니다.\n' \
+               '%s' % address
         chrome.unlock()
         return False, text
 
