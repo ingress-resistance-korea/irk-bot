@@ -14,7 +14,7 @@ class Worker:
         self.queue = Queue()
 
     def run(self):
-        self.queue.rpush(INTEL_REQUEST, json.dumps({"user": "SinerDJ", "value": "올림픽공원"})) # sample test
+        self.queue.rpush(INTEL_REQUEST, json.dumps({"user": "SinerDJ", "value": "올림픽공원"}))  # sample test
         while True:
             request_str = self.queue.lpop(INTEL_REQUEST)
             if request_str:

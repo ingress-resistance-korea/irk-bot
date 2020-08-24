@@ -10,7 +10,7 @@ def getLogger():
     logger.setLevel(logging.INFO)
 
     if ENV == PRODUCTION:
-        handler = logging.FileHandler('%s/worker.log' % LOG_DIR)
+        handler = logging.FileHandler('%s/irk-event-worker.log' % LOG_DIR)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
     else:

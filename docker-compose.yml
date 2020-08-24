@@ -2,12 +2,22 @@ version: '2'
 services:
   irk-event-worker:
     build:
-      context: .
+      context: irk-event-worker
       dockerfile: Dockerfile
     restart: always
-    container_name: irk-env-worker
+    container_name: irk-event-worker
     volumes:
-      - ./screenshots:/app/screenshots
-      - ./logs:/app/logs
+      - ./irk-event-worker/screenshots:/app/screenshots
+      - ./irk-event-worker/logs:/app/logs
     environment:
       - ENV=production
+
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - 6379:6379
+    container_name: redis
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data/redis:/data

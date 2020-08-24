@@ -27,17 +27,17 @@ RUN apt-get update && apt-get autoremove && apt-get autoclean \
         libappindicator3-1 \
         libatk-bridge2.0-0 \
         libatspi2.0-0 \
-        libgtk-3-0
-RUN dpkg -i /app/binaries/google-chrome-stable_current_amd64.deb \
+        libgtk-3-0 \
+    && dpkg -i /app/binaries/google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/*
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY ./requirements.txt /app/requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN pip3 install -r /app/requirements.txt
 
-COPY ./main.py /app/main.py
-COPY ./src /app/src
+COPY main.py /app/main.py
+COPY src /app/src
 
 RUN chmod +x /app/binaries/chromedriver \
     && mkdir -p /app/screenshots

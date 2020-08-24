@@ -12,7 +12,7 @@ logger = getLogger()
 
 def get_intel_screenshot(chrome: ChromeDriver, search_key):
     start_time = int(time.time())
-    print(search_key)
+    logger.info(search_key)
     now = datetime.datetime.now()
 
     if not chrome.check_lock():

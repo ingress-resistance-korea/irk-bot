@@ -1,9 +1,16 @@
-# server
-screenshots
-logs
-src/config/settings_dev.py
-src/config/settings_prod.py
-src/config/settings.py
+# stateful data
+data
+
+# irk-event-worker settings
+irk-event-worker/src/config/settings_dev.py
+irk-event-worker/src/config/settings_prod.py
+irk-event-worker/src/config/settings.py
+irk-event-worker/screenshots
+irk-event-worker/logs
+
+# redis configuration
+config/redis.conf
+data/redis
 
 # pycharm
 .idea
