@@ -1,0 +1,6 @@
+ADDRESS_NOT_FOUND_ERROR = '주소 데이터가 없습니다.'
+INVALID_LOCATION_NAME_ERROR = '유효하지 않은 지명입니다.'
+FAIL_TO_LOAD_INTEL_MAP_ERROR = '인텔맵을 불러오는 데 실패했어요 ㅠㅠ'
+FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR = '지도를 불러오긴 했는데... 로딩하는 도중에 실패했어요 ㅠㅠ'
+FAIL_TO_SAVE_SCREENSHOT_ERROR = '스크린샷 저장에 실패했어요... ㅠㅠ'
+TIME_EXCEED_ERROR = '너무 오래걸리는 지역이라서 이정도만 보여드릴게요!'

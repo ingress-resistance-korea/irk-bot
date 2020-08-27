@@ -8,6 +8,8 @@ from PIL import Image
 
 from src.config.settings import GOOGLE_EMAIL, GOOGLE_PASSWORD, INGRESS_AGENT_NAME
 from src.config.settings import CHROMEDRIVER_PATH, SCREENSHOT_DIR, SERVER_URL
+from src.worker.constants import ACCOUNTS_GOOGLE_COM, INTEL_INGRESS_COM, EMAIL, SIGN_IN, PASSWORD, SUBMIT, \
+    SUBMIT_APPROVE_ACCESS, LOGIN
 
 
 def setup_chrome():
@@ -51,7 +53,7 @@ class ChromeDriver:
 
     def sign_in_google_from_intel_map(self):
         self.logger.info('Signing In Google From Intel Map...')
-        url = 'https://intel.ingress.com'
+        url = 'https://%s' % INTEL_INGRESS_COM
         google_sign_in_url = None
         self.driver.get(url)
 
@@ -59,7 +61,7 @@ class ChromeDriver:
         a_tags = soup.find_all('a')
         for a_tag in a_tags:
             href = a_tag.get('href')
-            if href.find('accounts.google.com') and href.find('intel.ingress.com'):
+            if href.find(ACCOUNTS_GOOGLE_COM) and href.find(INTEL_INGRESS_COM):
                 google_sign_in_url = href
                 self.logger.info(google_sign_in_url)
                 break
@@ -71,28 +73,28 @@ class ChromeDriver:
         self.driver.get(google_sign_in_url)
         sleep(1)
         try:
-            self.driver.find_element_by_name('Email').send_keys(GOOGLE_EMAIL)
+            self.driver.find_element_by_name(EMAIL).send_keys(GOOGLE_EMAIL)
         except:
             print(self.driver.page_source)
-            self.save_screenshot('Email')
-        self.driver.find_element_by_name('signIn').click()
+            self.save_screenshot(EMAIL)
+        self.driver.find_element_by_name(SIGN_IN).click()
         sleep(1)
         try:
-            self.driver.find_element_by_name('Passwd').send_keys(GOOGLE_PASSWORD)
+            self.driver.find_element_by_name(PASSWORD).send_keys(GOOGLE_PASSWORD)
         except:
-            self.save_screenshot('Passwd')
+            self.save_screenshot(PASSWORD)
             print(self.driver.page_source)
         try:
-            self.driver.find_element_by_id('submit').click()
+            self.driver.find_element_by_id(SUBMIT).click()
         except:
             self.save_screenshot('signIn2')
             print(self.driver.page_source)
         sleep(1)
         try:
-            self.driver.find_element_by_id('submit_approve_access').click()
+            self.driver.find_element_by_id(SUBMIT_APPROVE_ACCESS).click()
         except:
             print(self.driver.page_source)
-            self.save_screenshot('login');
+            self.save_screenshot(LOGIN)
         sleep(1)
         # Check Success
         cnt = 0
