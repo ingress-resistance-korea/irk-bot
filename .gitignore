@@ -5,6 +5,7 @@ data
 .env
 
 # irk-event-worker settings
+irk-event-worker/src/config/settings_debug.py
 irk-event-worker/src/config/settings_dev.py
 irk-event-worker/src/config/settings_prod.py
 irk-event-worker/src/config/settings.py
