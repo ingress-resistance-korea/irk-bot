@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from PIL import Image
 
-from src.config.settings import GOOGLE_EMAIL, GOOGLE_PASSWORD, INGRESS_AGENT_NAME
-from src.config.settings import CHROMEDRIVER_PATH, SCREENSHOT_DIR, SERVER_URL
+from src.configs.settings import GOOGLE_EMAIL, GOOGLE_PASSWORD, INGRESS_AGENT_NAME
+from src.configs.settings import CHROMEDRIVER_PATH, SCREENSHOT_DIR, SERVER_URL
 from src.worker.constants import ACCOUNTS_GOOGLE_COM, INTEL_INGRESS_COM, EMAIL, SIGN_IN, PASSWORD, SUBMIT, \
     SUBMIT_APPROVE_ACCESS, LOGIN
 

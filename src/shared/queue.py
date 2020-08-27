@@ -1,6 +1,6 @@
 from redis import Redis
 
-from src.config.settings import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+from src.configs.settings import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 
 
 class Queue:

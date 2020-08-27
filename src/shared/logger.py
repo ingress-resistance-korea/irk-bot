@@ -1,6 +1,6 @@
 import sys
 import logging
-from src.config.settings import ENV, LOG_DIR
+from src.configs.settings import ENV, LOG_DIR
 
 PRODUCTION = 'production'
 

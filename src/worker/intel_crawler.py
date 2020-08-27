@@ -2,9 +2,9 @@ import time
 import datetime
 
 from src.worker.chromedriver import ChromeDriver
-from src.utils.logger import getLogger
-from src.utils.maps import get_location
-from src.config.settings import MAX_LOAD_TIME
+from src.shared.logger import getLogger
+from src.worker.maps import get_location
+from src.configs.settings import MAX_LOAD_TIME
 from src.worker.constants import INTEL_URL, INTEL_TITLE
 from src.worker.constatns_error import ADDRESS_NOT_FOUND_ERROR, INVALID_LOCATION_NAME_ERROR, \
     FAIL_TO_LOAD_INTEL_MAP_ERROR, FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR, \

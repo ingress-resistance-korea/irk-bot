@@ -1,5 +1,5 @@
 import requests
-from src.config.settings import GOOGLE_MAP_KEY
+from src.configs.settings import GOOGLE_MAP_KEY
 
 
 def get_location(address):

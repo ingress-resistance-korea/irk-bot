@@ -3,8 +3,8 @@ import json
 from src.worker.chromedriver import ChromeDriver
 from src.worker.constants import INTEL_REQUEST, INTEL_RESPONSE
 from src.worker.intel_crawler import Crawler
-from src.utils.logger import getLogger
-from src.utils.queue import Queue
+from src.shared.logger import getLogger
+from src.shared.queue import Queue
 
 
 class Worker:

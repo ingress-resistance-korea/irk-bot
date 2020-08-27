@@ -5,8 +5,8 @@ ENV LANG="C.UTF-8"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV TZ="Asia/Seoul"
 
-COPY binaries/google-chrome-stable_current_amd64.deb /app/binaries/google-chrome-stable_current_amd64.deb
-COPY binaries/chromedriver /app/binaries/chromedriver
+COPY binaries /app/binaries/google-chrome-stable_current_amd64.deb
+COPY binaries /app/binaries/chromedriver
 
 RUN apt-get update && apt-get autoremove && apt-get autoclean \
     && apt-get install -y \
@@ -32,16 +32,18 @@ RUN apt-get update && apt-get autoremove && apt-get autoclean \
     && rm -rf /var/lib/apt/lists/*
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY requirements.txt /app/requirements.txt
+COPY requirements/worker/requirements.txt /app/requirements.txt
 
 RUN pip3 install -r /app/requirements.txt
 
-COPY main.py /app/main.py
-COPY src /app/src
+COPY main_worker.py /app/main_worker.py
+COPY src/config /app/src/config
+COPY src/worker /app/src/worker
+COPY src/shsared /app/src/shared
 
 RUN chmod +x /app/binaries/chromedriver \
     && mkdir -p /app/screenshots
  
 WORKDIR /app
 
-ENTRYPOINT ["python3", "main.py"]
+ENTRYPOINT ["python3", "main_worker.py"]

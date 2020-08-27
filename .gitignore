@@ -5,15 +5,15 @@ data
 .env
 
 # irk-event-worker settings
-irk-event-worker/src/config/settings_debug.py
-irk-event-worker/src/config/settings_dev.py
-irk-event-worker/src/config/settings_prod.py
-irk-event-worker/src/config/settings.py
-irk-event-worker/screenshots
-irk-event-worker/logs
+src/configs/settings_debug.py
+src/configs/settings_dev.py
+src/configs/settings_prod.py
+src/configs/settings.py
+data/screenshots
+data/logs
 
 # redis configuration
-config/redis.conf
+configs/redis.conf
 data/redis
 
 # pycharm
