@@ -36,4 +36,4 @@ services:
       - $NGINX_PORT:80
     container_name: irk-nginx
     volumes:
-      - ./irk-event-worker/screenshots:/var/www/html/screenshots
+      - ./irk-event-worker/screenshots:/usr/share/nginx/html/screenshots
