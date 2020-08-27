@@ -23,8 +23,6 @@ def setup_chrome():
 
 class ChromeDriver:
     driver = None
-    lock_id = None
-    locked_at = None
     origin_bounding_box = (20, 140, 1860, 880)
 
     def __init__(self, logger):
@@ -33,20 +31,6 @@ class ChromeDriver:
         self.driver = setup_chrome()
         self.driver = self.sign_in_google_from_intel_map()
         self.logger.info('Initialize ChromeDriver Complete...')
-
-    def lock(self, lock_id):
-        if not self.check_lock():
-            self.lock_id = lock_id
-            self.locked_at = datetime.now().strftime('%H:%M:%S')
-            return True
-        return False
-
-    def unlock(self):
-        self.lock_id = None
-        self.locked_at = None
-
-    def check_lock(self):
-        return self.lock_id
 
     def save_screenshot(self, filename):
         file_dir = SCREENSHOT_DIR

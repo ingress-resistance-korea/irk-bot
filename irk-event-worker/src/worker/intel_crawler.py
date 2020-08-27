@@ -10,26 +10,16 @@ from src.config.settings import MAX_LOAD_TIME
 logger = getLogger()
 
 
-def get_intel_screenshot(chrome: ChromeDriver, search_key):
+def get_intel_screenshot(chrome: ChromeDriver, location_name):
     start_time = int(time.time())
-    logger.info(search_key)
+    logger.info(location_name)
     now = datetime.datetime.now()
-
-    if not chrome.check_lock():
-        lock_id = uuid4()
-        if not (chrome.lock(lock_id=lock_id)):
-            text = '%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요' % chrome.locked_at
-            return False, text
-    else:
-        text = '%s에 사용을 시작한 유저가 있습니다. 잠시만 기다려주세요' % chrome.locked_at
-        return False, text
 
     # get response
     logger.info('[%s] Getting Geolocation...' % (time.time() - start_time))
-    data = get_location(search_key)
+    data = get_location(location_name)
     if not len(data['results']):
         text = '구글에 주소 데이터가 없습니다.'
-        chrome.unlock()
         return False, text
 
     # get address
@@ -42,8 +32,7 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
         logger.info(e)
         logger.info(data)
         text = '주소를 불러오는데 실패했습니다.\n' \
-               '%s' % search_key
-        chrome.unlock()
+               '%s' % location_name
         return False, text
 
     # parsing address
@@ -60,7 +49,6 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
         logger.info(data)
         text = '좌표를 불러오는데 실패했습니다.\n' \
                '%s' % address
-        chrome.unlock()
         return False, text
 
     # Settings Zoom Level
@@ -82,10 +70,9 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
     chrome.driver.get(url)
     time.sleep(1)
 
-    logger.info('[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - start_time), search_key, lat, lng, z))
+    logger.info('[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - start_time), location_name, lat, lng, z))
     if chrome.driver.title != 'Ingress Intel Map':
         text = '지도를 불러오는 데 실패했어요 ㅠㅠ'
-        chrome.unlock()
         return False, text
 
     while True:
@@ -105,7 +92,6 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
             logger.info(e)
             logger.info(chrome.driver.page_source)
             text = '지도를 불러오긴 했는데... 로딩하는 도중에 실패했어요 ㅠㅠ'
-            chrome.unlock()
             return False, text
 
         # Load Complete
@@ -124,5 +110,4 @@ def get_intel_screenshot(chrome: ChromeDriver, search_key):
         logger.info(e)
         return False, text
 
-    chrome.unlock()
     return True, text
