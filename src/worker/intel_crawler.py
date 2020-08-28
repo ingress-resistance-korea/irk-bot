@@ -10,7 +10,7 @@ from src.worker.constatns_error import ADDRESS_NOT_FOUND_ERROR, INVALID_LOCATION
     FAIL_TO_LOAD_INTEL_MAP_ERROR, FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR, \
     FAIL_TO_SAVE_SCREENSHOT_ERROR, TIME_EXCEED_ERROR
 
-logger = getLogger()
+logger = getLogger('worker')
 
 
 class Crawler:

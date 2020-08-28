@@ -1,5 +1,3 @@
-INTEL_REQUEST = 'intel_request'
-INTEL_RESPONSE = 'intel_response'
 INTEL_URL = 'https://intel.ingress.com/intel?ll=%s,%s&z=%s'
 INTEL_TITLE = 'Ingress Intel Map'
 

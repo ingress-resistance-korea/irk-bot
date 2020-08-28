@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: dockerfiles/worker/Dockerfile
     restart: always
-    container_name: irk-event-worker
+    container_name: irk-worker
     volumes:
       - ./data/screenshots:/app/data/screenshots
       - ./data/logs:/app/data/logs
@@ -14,6 +14,17 @@ services:
     depends_on:
       - redis
       - nginx
+
+  bot_telegram:
+    build:
+      context: .
+      dockerfile: dockerfiles/bot_telegram/Dockerfile
+    restart: always
+    container_name: irk-bot-telegram
+    volumes:
+      - ./data/logs:/app/data/logs
+    depends_on:
+      - redis
 
   redis:
     restart: always
