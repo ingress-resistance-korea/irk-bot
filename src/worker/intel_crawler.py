@@ -20,17 +20,18 @@ class Crawler:
         self.message = ''
         self.text = ''
         self.now = None
+        self.url = ''
 
-    def get_intel_screenshot(self, location_name: str) -> (bool, str):
-        logger.info(location_name)
+    def get_intel_screenshot(self, location: str) -> (bool, str, str):
+        logger.info(location)
         self.start_time = int(time.time())
         self.now = datetime.datetime.now()
 
         # get response
         logger.info('[%s] Getting Address...' % (time.time() - self.start_time))
-        address_data = get_location(location_name)
+        address_data = get_location(location)
         if not len(address_data['results']):
-            return False, ADDRESS_NOT_FOUND_ERROR
+            return False, ADDRESS_NOT_FOUND_ERROR, ''
 
         # get address
         try:
@@ -42,7 +43,7 @@ class Crawler:
         except Exception as e:
             logger.info(address_data)
             logger.info(e)
-            return False, INVALID_LOCATION_NAME_ERROR
+            return False, INVALID_LOCATION_NAME_ERROR, ''
 
         # Settings Zoom Level
         logger.info('[%s] Setting Zoom Level...' % (time.time() - self.start_time))
@@ -51,20 +52,20 @@ class Crawler:
         # Getting Intel Map
         logger.info('[%s] Getting Intel Map...' % (time.time() - self.start_time))
         if not self._get_intel_map(lat=lat, lng=lng, z=z) or not self._check_intel_map_loaded():
-            self.text = FAIL_TO_LOAD_INTEL_MAP_ERROR
-            return False, self.text
+            self.text = FAIL_TO_LOAD_INTEL_MAP_ERROR, ''
+            return False, self.text, ''
 
-        logger.info('[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - self.start_time), location_name, lat, lng, z))
+        logger.info('[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - self.start_time), location, lat, lng, z))
         if not self._load_intel_map():
             self.text = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
-            return False, self.text
+            return False, self.text, ''
 
         # Saving Screenshot
         logger.info('[%s] Saving Screenshot...' % (time.time() - self.start_time))
         if not self._save_screenshot():
             self.text = FAIL_TO_SAVE_SCREENSHOT_ERROR
-            return False, self.text
-        return True, self.text
+            return False, self.text, ''
+        return True, self.text, self.url
 
     @staticmethod
     def _get_zoom_level(width: float) -> int:
@@ -134,7 +135,8 @@ class Crawler:
         filename = self.now.strftime('%Y%m%d%H%M%S')
         try:
             file_url = self.chrome.save_screenshot(filename)
-            self.text = '%s\n%s' % (self.message, file_url)
+            self.text = '%s' % self.message
+            self.url = file_url
         except Exception as e:
             logger.info(e)
             return False

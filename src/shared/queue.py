@@ -16,11 +16,36 @@ class Queue:
         value = self.redis.lpop(name)
         return value.decode(self.UTF_8) if value else value
 
-    def request_intel(self, event_id, client_type, location_name, chat_data):
+
+class BotQueue(Queue):
+    def send_request_intel(self, event_id, response_event_to, location, chat, message, user):
         data = {
-            'client_type': client_type,
-            'location_name': location_name,
             'event_id': event_id,
-            'chat_data': chat_data,
+            'response_event_to': response_event_to,
+            'location': location,
+            'chat': chat,
+            'message': message,
+            'user': user,
         }
         return self._rpush(INTEL_REQUEST, json.dumps(data))
+
+    def receive_response_intel(self, response_event_to):
+        data = self._lpop(response_event_to)
+        return json.loads(data) if data else data
+
+
+class WorkerQueue(Queue):
+    def receive_request_intel(self):
+        data = self._lpop(INTEL_REQUEST)
+        return json.loads(data) if data else data
+
+    def send_response_intel(self, event_id, response_event_to, text, url, chat, message, user):
+        data = {
+            'event_id': event_id,
+            'text': text,
+            'url': url,
+            'chat': chat,
+            'message': message,
+            'user': user,
+        }
+        return self._rpush(response_event_to, json.dumps(data))
