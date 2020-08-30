@@ -47,4 +47,4 @@ services:
       - $NGINX_PORT:80
     container_name: irk-nginx
     volumes:
-      - ./screenshots:/usr/share/nginx/html/screenshots
+      - ./data/screenshots:/usr/share/nginx/html/screenshots

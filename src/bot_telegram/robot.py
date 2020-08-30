@@ -7,16 +7,17 @@ from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, Callb
 from src.bot_telegram.commands.intel import get_intel_screenshot
 from src.bot_telegram.commands.help import get_documents
 from src.bot_telegram.commands.irk import get_irk_community_guide
+from src.shared.constants import INTEL_RESPONSE_TELEGRAM
 
 from src.shared.logger import getLogger
 from src.configs.settings import TELEGRAM_TOKEN
-from src.shared.queue import Queue
+from src.shared.queue import BotQueue
 
 
 class Robot(object):
     def __init__(self):
         self.logger = getLogger('bot-telegram')
-        self.queue = Queue()
+        self.queue = BotQueue()
         self.client = telegram.Bot(TELEGRAM_TOKEN)
         self.updater = Updater(TELEGRAM_TOKEN, use_context=True)
 
@@ -44,7 +45,7 @@ class Robot(object):
 
         self.updater.start_polling(timeout=1)
         while True:
-            # event subscriber will be placed here
+            self.receive_events()
             time.sleep(1)
 
     # message reply function
@@ -68,3 +69,17 @@ class Robot(object):
     @staticmethod
     def not_supported_command(update: Update, context: CallbackContext):
         update.message.reply_text("준비중인 기능입니다.")
+
+    def receive_events(self):
+        response = self.queue.receive_response_intel(INTEL_RESPONSE_TELEGRAM)
+        if response:
+            self.send_intel_response(response)
+        pass
+
+    def send_intel_response(self, response):
+        chat_id = response['chat']['id']
+        text = response['text']
+        url = response['url']
+        text = '%s\n%s' % (text, url) if url else text
+        self.client.send_message(chat_id=chat_id, text=text)
+
