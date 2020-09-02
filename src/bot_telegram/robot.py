@@ -79,7 +79,7 @@ class Robot(object):
         pass
 
     def send_intel_response(self, response):
-        chat_id = response['chat']['id']
+        chat_id = response['data']['chat']['id']
         result = self._parse_result(response['result'])
         if not result.success:
             self.client.send_message(chat_id=chat_id, text=result.error_message)

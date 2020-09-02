@@ -20,10 +20,11 @@ class Worker:
                 event_id = request['event_id']
                 response_event_to = request['response_event_to']
                 location = request['location']
-                chat = request['chat']
-                message = request['message']
-                user = request['user']
+                data = request['data']
                 result = self.crawler.get_intel_screenshot(location=location)
-                intel_response = json.dumps(request)
+                intel_response = json.dumps({
+                    'request': request,
+                    'result': result
+                })
                 self.logger.info(intel_response)
-                self.queue.send_response_intel(event_id, response_event_to, result, chat, message, user)
+                self.queue.send_response_intel(event_id, response_event_to, result, data)
