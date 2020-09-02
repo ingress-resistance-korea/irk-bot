@@ -80,6 +80,6 @@ class Robot(object):
         chat_id = response['chat']['id']
         text = response['text']
         url = response['url']
-        text = '%s\n%s' % (text, url) if url else text
+        text = '`%s`\n%s' % (text, url) if url else text
         self.client.send_message(chat_id=chat_id, text=text)
 
