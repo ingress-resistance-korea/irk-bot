@@ -12,15 +12,15 @@ from src.shared.types import IntelResult
 
 class Queue:
     def __init__(self):
-        self.UTF_8 = 'utf-8'
-        self.redis = Redis(host=REDIS_HOST, port=REDIS_PORT)
+        self._UTF_8 = 'utf-8'
+        self._redis = Redis(host=REDIS_HOST, port=REDIS_PORT)
 
     def _rpush(self, name, data):
-        return self.redis.rpush(name, data)
+        return self._redis.rpush(name, data)
 
     def _lpop(self, name):
-        value = self.redis.lpop(name)
-        return value.decode(self.UTF_8) if value else value
+        value = self._redis.lpop(name)
+        return value.decode(self._UTF_8) if value else value
 
 
 class BotQueue(Queue):
