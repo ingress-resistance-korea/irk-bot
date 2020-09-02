@@ -46,7 +46,7 @@ class Robot(object):
         self.updater.start_polling(timeout=1)
         while True:
             self.receive_events()
-            time.sleep(1)
+            time.sleep(0.3)
 
     # message reply function
     @staticmethod
