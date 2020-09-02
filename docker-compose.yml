@@ -32,8 +32,6 @@ services:
     ports:
       - $REDIS_PORT:6379
     container_name: irk-redis
-    environment:
-      - REDIS_PASSWORD=$REDIS_PASSWORD
     entrypoint:
       'redis-server --requirepass "$REDIS_PASSWORD"'
     volumes:

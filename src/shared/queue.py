@@ -1,13 +1,13 @@
 from redis import Redis
 import json
-from src.configs.settings import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+from src.configs.settings import REDIS_HOST, REDIS_PORT
 from src.shared.constants import INTEL_REQUEST
 
 
 class Queue:
     def __init__(self):
         self.UTF_8 = 'utf-8'
-        self.redis = Redis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
+        self.redis = Redis(host=REDIS_HOST, port=REDIS_PORT)
 
     def _rpush(self, name, data):
         return self.redis.rpush(name, data)
