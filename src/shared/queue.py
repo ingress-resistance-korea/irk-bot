@@ -1,7 +1,13 @@
+from typing import Type
+
 from redis import Redis
 import json
+
+from telegram import Chat, Message, User
+
 from src.configs.settings import REDIS_HOST, REDIS_PORT
 from src.shared.constants import INTEL_REQUEST
+from src.shared.types import IntelResult
 
 
 class Queue:
@@ -39,11 +45,17 @@ class WorkerQueue(Queue):
         data = self._lpop(INTEL_REQUEST)
         return json.loads(data) if data else data
 
-    def send_response_intel(self, event_id, response_event_to, text, url, chat, message, user):
+    def send_response_intel(self, event_id: str, response_event_to: str, result: Type[IntelResult], chat: Chat,
+                            message: Message, user: User):
         data = {
             'event_id': event_id,
-            'text': text,
-            'url': url,
+            'result': {
+                'success': result.success,
+                'url': result.url,
+                'address': result.address,
+                'error_message': result.error_message,
+                'timestamp': str(result.timestamp),
+            },
             'chat': chat,
             'message': message,
             'user': user,

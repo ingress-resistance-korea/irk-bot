@@ -1,4 +1,5 @@
 import time
+from typing import Type
 
 import telegram
 from telegram import Update
@@ -12,6 +13,7 @@ from src.shared.constants import INTEL_RESPONSE_TELEGRAM
 from src.shared.logger import getLogger
 from src.configs.settings import TELEGRAM_TOKEN
 from src.shared.queue import BotQueue
+from src.shared.types import IntelResult
 
 
 class Robot(object):
@@ -50,7 +52,7 @@ class Robot(object):
 
     # message reply function
     @staticmethod
-    def get_message(bot, update: Update, _: CallbackContext):
+    def get_message(bot, update: Update):
         if str(update.message.text).startswith('/'):
             update.message.reply_text("지원하지 않는 명령어입니다.")
         else:
@@ -78,8 +80,20 @@ class Robot(object):
 
     def send_intel_response(self, response):
         chat_id = response['chat']['id']
-        text = response['text']
-        url = response['url']
-        text = '`%s`\n%s' % (text, url) if url else text
+        result = self._parse_result(response['result'])
+        if not result.success:
+            self.client.send_message(chat_id=chat_id, text=result.error_message)
+        text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
         self.client.send_message(chat_id=chat_id, text=text)
+
+    @staticmethod
+    def _parse_result(result: dict) -> Type[IntelResult]:
+        parsed_result = IntelResult
+
+        parsed_result.success = result['success']
+        parsed_result.url = result['url']
+        parsed_result.address = result['address']
+        parsed_result.error_message = result['error_message']
+        parsed_result.timestamp = result['timestamp']
+        return parsed_result
 

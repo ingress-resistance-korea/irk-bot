@@ -23,7 +23,7 @@ class Worker:
                 chat = request['chat']
                 message = request['message']
                 user = request['user']
-                success, text, url = self.crawler.get_intel_screenshot(location=location)
+                result = self.crawler.get_intel_screenshot(location=location)
                 intel_response = json.dumps(request)
                 self.logger.info(intel_response)
-                self.queue.send_response_intel(event_id, response_event_to, text, url, chat, message, user)
+                self.queue.send_response_intel(event_id, response_event_to, result, chat, message, user)
