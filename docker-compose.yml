@@ -26,6 +26,17 @@ services:
     depends_on:
       - redis
 
+  bot_slack:
+    build:
+      context: .
+      dockerfile: dockerfiles/bot_slack/Dockerfile
+    restart: always
+    container_name: irk-bot-slack
+    volumes:
+      - ./data/logs:/app/data/logs
+    depends_on:
+      - redis
+
   redis:
     restart: always
     image: redis:latest
