@@ -24,7 +24,8 @@ def request_intel_screenshot(web_client: WebClient, queue: BotQueue, message: Ty
 def response_intel_screenshot(web_client: WebClient, response):
     channel = response['data']['channel']
     result = parse_intel_result(response['result'])
-    if not result.success:
+    if result.success:
+        text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
+        web_client.chat_postMessage(channel=channel, text=text)
+    else:
         web_client.chat_postMessage(channel=channel, text=result.error_message)
-    text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
-    web_client.chat_postMessage(channel=channel, text=text)
