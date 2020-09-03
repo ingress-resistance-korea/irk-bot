@@ -2,7 +2,7 @@ import time
 from typing import Type
 
 import telegram
-from telegram import Update
+from telegram import Update, ParseMode
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext
 
 from src.bot_telegram.commands.intel import get_intel_screenshot
@@ -46,7 +46,7 @@ class Robot(object):
         message_handler = MessageHandler(Filters.text, self.get_message)
         self.updater.dispatcher.add_handler(message_handler)
 
-        self.updater.start_polling(timeout=1)
+        self.updater.start_polling()
         while True:
             self.receive_events()
             time.sleep(0.3)
@@ -85,4 +85,4 @@ class Robot(object):
         if not result.success:
             self.client.send_message(chat_id=chat_id, text=result.error_message)
         text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
-        self.client.send_message(chat_id=chat_id, text=text)
+        self.client.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
