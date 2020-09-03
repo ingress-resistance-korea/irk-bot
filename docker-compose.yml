@@ -43,8 +43,6 @@ services:
     ports:
       - $REDIS_PORT:6379
     container_name: irk-redis
-    entrypoint:
-      'redis-server --requirepass "$REDIS_PASSWORD"'
     volumes:
       - ./configs/redis.conf:/usr/local/etc/redis/redis.conf
       - ./data/redis:/data
