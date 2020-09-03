@@ -16,5 +16,10 @@ def get_intel_screenshot(queue: BotQueue, update: Update, context: CallbackConte
     from_user = from_user.to_dict()
     chat: telegram.Chat = update.effective_chat
     chat = chat.to_dict()
-    queue.send_request_intel(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM, location=location, chat=chat, message=message, user=from_user)
+    data = {
+        'chat': chat,
+        'message': message,
+        'user': from_user,
+    }
+    queue.send_request_intel(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM, location=location, data=data)
     update.message.reply_markdown('잠시만 기다려주세요')

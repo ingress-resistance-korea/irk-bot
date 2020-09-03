@@ -26,14 +26,23 @@ services:
     depends_on:
       - redis
 
+  bot_slack:
+    build:
+      context: .
+      dockerfile: dockerfiles/bot_slack/Dockerfile
+    restart: always
+    container_name: irk-bot-slack
+    volumes:
+      - ./data/logs:/app/data/logs
+    depends_on:
+      - redis
+
   redis:
     restart: always
     image: redis:latest
     ports:
       - $REDIS_PORT:6379
     container_name: irk-redis
-    entrypoint:
-      'redis-server --requirepass "$REDIS_PASSWORD"'
     volumes:
       - ./configs/redis.conf:/usr/local/etc/redis/redis.conf
       - ./data/redis:/data

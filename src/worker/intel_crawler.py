@@ -2,7 +2,7 @@ import time
 import datetime
 from typing import Type
 
-from src.shared.types import IntelResult
+from src.shared.type import IntelResult
 from src.worker.chromedriver import ChromeDriver
 from src.shared.logger import getLogger
 from src.worker.maps import get_location
