@@ -25,6 +25,8 @@ services:
       - ./data/logs:/app/data/logs
     depends_on:
       - redis
+      - nginx
+      - worker
 
   bot_slack:
     build:
@@ -36,6 +38,8 @@ services:
       - ./data/logs:/app/data/logs
     depends_on:
       - redis
+      - nginx
+      - worker
 
   redis:
     restart: always
