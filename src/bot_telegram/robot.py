@@ -83,7 +83,7 @@ class Robot(object):
         chat_id = response['data']['chat']['id']
         result = parse_intel_result(response['result'])
         if result.success:
-            self.client.send_message(chat_id=chat_id, text=result.error_message)
-        else:
             text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
             self.client.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
+        else:
+            self.client.send_message(chat_id=chat_id, text=result.error_message)
