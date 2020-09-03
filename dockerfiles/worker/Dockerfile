@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ENV LC_ALL="C.UTF-8"
 ENV LANG="C.UTF-8"
@@ -14,7 +14,6 @@ RUN apt-get update && apt-get autoremove && apt-get autoclean \
         python3-pip \
         build-essential \
         libxss1 \
-        libgconf2-4 \
         libappindicator1 \
         libindicator7 \
         fonts-liberation \
