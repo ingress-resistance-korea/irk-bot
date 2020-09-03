@@ -4,6 +4,7 @@ from src.worker.chromedriver import ChromeDriver
 from src.worker.intel_crawler import Crawler
 from src.shared.logger import getLogger
 from src.shared.queue import WorkerQueue
+from src.worker.parser import intel_result_to_dict
 
 
 class Worker:
@@ -24,7 +25,7 @@ class Worker:
                 result = self.crawler.get_intel_screenshot(location=location)
                 intel_response = json.dumps({
                     'request': request,
-                    'result': result
+                    'result': intel_result_to_dict(result),
                 })
                 self.logger.info(intel_response)
                 self.queue.send_response_intel(event_id, response_event_to, result, data)

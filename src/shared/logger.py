@@ -10,7 +10,14 @@ def getLogger(name):
     logger.setLevel(logging.INFO)
 
     if ENV == PRODUCTION:
-        handler = logging.FileHandler('%s/%s.log' % (LOG_DIR, name))
+        try:
+            handler = logging.FileHandler('%s/%s.log' % (LOG_DIR, name))
+        except FileNotFoundError:
+            f = open('%s/%s.log' % (LOG_DIR, name), 'w')
+            f.close()
+            handler = logging.FileHandler('%s/%s.log' % (LOG_DIR, name))
+        except Exception as e:
+            raise e
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
     else:

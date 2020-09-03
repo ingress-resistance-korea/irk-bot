@@ -1,6 +1,6 @@
 # Command
 CMD_PREFIX = '!'
-CMD_INTEL = CMD_PREFIX + 'intel'
+CMD_INTEL = CMD_PREFIX + 'intel '
 
 # Color
 RED = '#FF0000'

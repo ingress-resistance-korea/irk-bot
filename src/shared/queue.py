@@ -5,7 +5,7 @@ import json
 
 from src.configs.settings import REDIS_HOST, REDIS_PORT
 from src.shared.constants import INTEL_REQUEST
-from src.shared.types import IntelResult
+from src.shared.type import IntelResult
 
 
 class Queue:
@@ -22,12 +22,12 @@ class Queue:
 
 
 class BotQueue(Queue):
-    def send_request_intel(self, event_id, response_event_to, location, data):
+    def send_request_intel(self, event_id: str, response_event_to: str, location: str, data: dict):
         request = {
             'event_id': event_id,
             'response_event_to': response_event_to,
             'location': location,
-            'data': data,
+            'data': data
         }
         return self._rpush(INTEL_REQUEST, json.dumps(request))
 
