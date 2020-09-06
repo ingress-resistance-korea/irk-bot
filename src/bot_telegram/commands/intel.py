@@ -1,21 +1,26 @@
 from uuid import uuid4
 
+import telegram
+from telegram import Update
+from telegram.ext import CallbackContext
 
-def get_intel_screenshot(queue, update, context):
-    location_name = ' '.join(context.args)
-    message = update['message']
-    from_user = message['from_user']
-    chat_data = {
-        'date': str(message['date']),
-        'chat_id': message['chat_id'],
-        'from_user': {
-            'username': from_user['username'],
-            'language_code': from_user['language_code'],
-            'id': from_user['id'],
-            'first_name': from_user['first_name'],
-            'last_name': from_user['last_name'],
-            'is_bot': from_user['is_bot'],
-        }
-    }
-    queue.request_intel(event_id=str(uuid4()), client_type='telegram', location_name=location_name, chat_data=chat_data)
+from src.bot_telegram.utils import get_data
+from src.shared.constants import INTEL_RESPONSE_TELEGRAM
+from src.shared.queue import BotQueue
+
+
+def get_intel_screenshot(queue: BotQueue, update: Update, context: CallbackContext):
+    location = ' '.join(context.args)
+    data = get_data(update)
+    queue.send_request_intel(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM, location=location,
+                             data=data)
+    update.message.reply_markdown('잠시만 기다려주세요')
+
+
+def get_intel_screenshot_by_position(queue: BotQueue, update: Update, context: CallbackContext):
+    message = update.message
+    latitude, longitude = (message.location.latitude, message.location.longitude)
+    data = get_data(update)
+    queue.send_request_intel_by_position(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM,
+                                         latitude=latitude, longitude=longitude, data=data)
     update.message.reply_markdown('잠시만 기다려주세요')

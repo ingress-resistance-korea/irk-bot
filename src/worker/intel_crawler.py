@@ -1,6 +1,8 @@
 import time
 import datetime
+from typing import Type
 
+from src.shared.type import IntelResult
 from src.worker.chromedriver import ChromeDriver
 from src.shared.logger import getLogger
 from src.worker.maps import get_location
@@ -15,56 +17,44 @@ logger = getLogger('worker')
 
 class Crawler:
     def __init__(self, chrome: ChromeDriver):
+        self.result = IntelResult
         self.chrome = chrome
-        self.start_time = None
-        self.message = ''
-        self.text = ''
-        self.now = None
 
-    def get_intel_screenshot(self, location_name: str) -> (bool, str):
-        logger.info(location_name)
-        self.start_time = int(time.time())
-        self.now = datetime.datetime.now()
+    def _init(self):
+        self.result.success = False
+        self.result.timestamp = datetime.datetime.now()
+        self.result.start_time = int(time.time())
+        self.result.error_message = '',
+        self.result.address = ''
+        self.result.url = ''
+
+    def get_intel_screenshot(self, location: str) -> Type[IntelResult]:
+        self._init()
+        logger.info(location)
 
         # get response
-        logger.info('[%s] Getting Address...' % (time.time() - self.start_time))
-        address_data = get_location(location_name)
+        logger.info('[%s] Getting Address...' % (time.time() - self.result.start_time))
+        address_data = get_location(location)
         if not len(address_data['results']):
-            return False, ADDRESS_NOT_FOUND_ERROR
+            self.result.error_message = ADDRESS_NOT_FOUND_ERROR
+            return self.result
 
         # get address
         try:
-            logger.info('[%s] Parsing Address...' % (time.time() - self.start_time))
+            logger.info('[%s] Parsing Address...' % (time.time() - self.result.start_time))
             address = self._parse_address(address_data)
             lat, lng, width = self._get_geolocation(address_data)
-            self.message = '%s\n' \
-                           '%s' % (address, str(self.now))
+            self.result.address = address
         except Exception as e:
             logger.info(address_data)
             logger.info(e)
-            return False, INVALID_LOCATION_NAME_ERROR
+            self.result.error_message = INVALID_LOCATION_NAME_ERROR
+            return self.result
 
         # Settings Zoom Level
-        logger.info('[%s] Setting Zoom Level...' % (time.time() - self.start_time))
+        logger.info('[%s] Setting Zoom Level...' % (time.time() - self.result.start_time))
         z = self._get_zoom_level(width)
-
-        # Getting Intel Map
-        logger.info('[%s] Getting Intel Map...' % (time.time() - self.start_time))
-        if not self._get_intel_map(lat=lat, lng=lng, z=z) or not self._check_intel_map_loaded():
-            self.text = FAIL_TO_LOAD_INTEL_MAP_ERROR
-            return False, self.text
-
-        logger.info('[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - self.start_time), location_name, lat, lng, z))
-        if not self._load_intel_map():
-            self.text = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
-            return False, self.text
-
-        # Saving Screenshot
-        logger.info('[%s] Saving Screenshot...' % (time.time() - self.start_time))
-        if not self._save_screenshot():
-            self.text = FAIL_TO_SAVE_SCREENSHOT_ERROR
-            return False, self.text
-        return True, self.text
+        return self.get_intel_screenshot_by_position(latitude=lat, longitude=lng, z=z)
 
     @staticmethod
     def _get_zoom_level(width: float) -> int:
@@ -109,13 +99,12 @@ class Crawler:
     def _load_intel_map(self) -> bool:
         while True:
             current_time = int(time.time())
-            spent_time = current_time - self.start_time
+            spent_time = current_time - self.result.start_time
 
             # Timeout
             if spent_time > MAX_LOAD_TIME:
-                self.message = '%s\n' \
-                               '%s' % (TIME_EXCEED_ERROR, self.message)
-                return True
+                self.result.error_message = TIME_EXCEED_ERROR
+                return False
 
             # Get Loading Percent
             try:
@@ -131,11 +120,33 @@ class Crawler:
             time.sleep(1)
 
     def _save_screenshot(self):
-        filename = self.now.strftime('%Y%m%d%H%M%S')
+        filename = self.result.timestamp.strftime('%Y%m%d%H%M%S')
         try:
             file_url = self.chrome.save_screenshot(filename)
-            self.text = '%s\n%s' % (self.message, file_url)
+            self.result.url = file_url
         except Exception as e:
             logger.info(e)
             return False
         return True
+
+    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=15):
+        self._init()
+        # Getting Intel Map
+        logger.info('[%s] Getting Intel Map...' % (time.time() - self.result.start_time))
+        if not self._get_intel_map(lat=latitude, lng=longitude, z=z) or not self._check_intel_map_loaded():
+            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_ERROR
+            return self.result
+
+        logger.info(
+            '[%s] (lat: %s, lng: %s, z: %s)' % ((time.time() - self.result.start_time), latitude, longitude, z))
+        if not self._load_intel_map():
+            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
+            return self.result
+
+        # Saving Screenshot
+        logger.info('[%s] Saving Screenshot...' % (time.time() - self.result.start_time))
+        if not self._save_screenshot():
+            self.result.error_message = FAIL_TO_SAVE_SCREENSHOT_ERROR
+            return self.result
+        self.result.success = True
+        return self.result
