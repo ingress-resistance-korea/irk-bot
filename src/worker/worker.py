@@ -1,5 +1,6 @@
 import json
 
+from src.shared.constants import IntelRequestType
 from src.worker.chromedriver import ChromeDriver
 from src.worker.intel_crawler import Crawler
 from src.shared.logger import getLogger
@@ -20,9 +21,16 @@ class Worker:
             if request:
                 event_id = request['event_id']
                 response_event_to = request['response_event_to']
-                location = request['location']
+                request_type = request['request_type']
                 data = request['data']
-                result = self.crawler.get_intel_screenshot(location=location)
+                if request_type == IntelRequestType.POSITION.value:
+                    latitude, longitude = request['position']['latitude'], request['position']['longitude']
+                    result = self.crawler.get_intel_screenshot_by_position(latitude=latitude, longitude=longitude)
+                elif request_type == IntelRequestType.LOCATION.value:
+                    location = request['location']
+                    result = self.crawler.get_intel_screenshot(location=location)
+                else:
+                    raise ValueError
                 intel_response = json.dumps({
                     'request': request,
                     'result': intel_result_to_dict(result),

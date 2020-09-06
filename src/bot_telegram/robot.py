@@ -3,9 +3,9 @@ from typing import Type
 
 import telegram
 from telegram import Update, ParseMode
-from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext, Handler
 
-from src.bot_telegram.commands.intel import get_intel_screenshot
+from src.bot_telegram.commands.intel import get_intel_screenshot, get_intel_screenshot_by_position
 from src.bot_telegram.commands.help import get_documents
 from src.bot_telegram.commands.irk import get_irk_community_guide
 from src.shared.constants import INTEL_RESPONSE_TELEGRAM
@@ -43,6 +43,9 @@ class Robot(object):
         subscribe_handler = CommandHandler('subscribe', self.not_supported_command)
         self.updater.dispatcher.add_handler(subscribe_handler)
 
+        location_handler = MessageHandler(Filters.location, self.get_location)
+        self.updater.dispatcher.add_handler(location_handler)
+
         message_handler = MessageHandler(Filters.text, self.get_message)
         self.updater.dispatcher.add_handler(message_handler)
 
@@ -58,6 +61,9 @@ class Robot(object):
             update.message.reply_text("지원하지 않는 명령어입니다.")
         else:
             update.message.reply_text("답장 기능이 제공되지 않습니다.")
+
+    def get_location(self, update: Update, context: CallbackContext):
+        get_intel_screenshot_by_position(self.queue, update, context)
 
     # commands
     def intel_command(self, update: Update, context: CallbackContext):

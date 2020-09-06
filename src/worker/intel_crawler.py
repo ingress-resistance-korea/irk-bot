@@ -54,26 +54,7 @@ class Crawler:
         # Settings Zoom Level
         logger.info('[%s] Setting Zoom Level...' % (time.time() - self.result.start_time))
         z = self._get_zoom_level(width)
-
-        # Getting Intel Map
-        logger.info('[%s] Getting Intel Map...' % (time.time() - self.result.start_time))
-        if not self._get_intel_map(lat=lat, lng=lng, z=z) or not self._check_intel_map_loaded():
-            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_ERROR
-            return self.result
-
-        logger.info(
-            '[%s] %s (lat: %s, lng: %s, z: %s)' % ((time.time() - self.result.start_time), location, lat, lng, z))
-        if not self._load_intel_map():
-            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
-            return self.result
-
-        # Saving Screenshot
-        logger.info('[%s] Saving Screenshot...' % (time.time() - self.result.start_time))
-        if not self._save_screenshot():
-            self.result.error_message = FAIL_TO_SAVE_SCREENSHOT_ERROR
-            return self.result
-        self.result.success = True
-        return self.result
+        return self.get_intel_screenshot_by_position(latitude=lat, longitude=lng, z=z)
 
     @staticmethod
     def _get_zoom_level(width: float) -> int:
@@ -147,3 +128,25 @@ class Crawler:
             logger.info(e)
             return False
         return True
+
+    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=15):
+        self._init()
+        # Getting Intel Map
+        logger.info('[%s] Getting Intel Map...' % (time.time() - self.result.start_time))
+        if not self._get_intel_map(lat=latitude, lng=longitude, z=z) or not self._check_intel_map_loaded():
+            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_ERROR
+            return self.result
+
+        logger.info(
+            '[%s] (lat: %s, lng: %s, z: %s)' % ((time.time() - self.result.start_time), latitude, longitude, z))
+        if not self._load_intel_map():
+            self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
+            return self.result
+
+        # Saving Screenshot
+        logger.info('[%s] Saving Screenshot...' % (time.time() - self.result.start_time))
+        if not self._save_screenshot():
+            self.result.error_message = FAIL_TO_SAVE_SCREENSHOT_ERROR
+            return self.result
+        self.result.success = True
+        return self.result

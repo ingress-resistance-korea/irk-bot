@@ -4,7 +4,7 @@ from redis import Redis
 import json
 
 from src.configs.settings import REDIS_HOST, REDIS_PORT
-from src.shared.constants import INTEL_REQUEST
+from src.shared.constants import INTEL_REQUEST, IntelRequestType
 from src.shared.type import IntelResult
 
 
@@ -25,8 +25,22 @@ class BotQueue(Queue):
     def send_request_intel(self, event_id: str, response_event_to: str, location: str, data: dict):
         request = {
             'event_id': event_id,
+            'request_type': IntelRequestType.LOCATION.value,
             'response_event_to': response_event_to,
             'location': location,
+            'data': data
+        }
+        return self._rpush(INTEL_REQUEST, json.dumps(request))
+
+    def send_request_intel_by_position(self, event_id: str, response_event_to: str, latitude: float, longitude: float, data: dict):
+        request = {
+            'event_id': event_id,
+            'request_type': IntelRequestType.POSITION.value,
+            'response_event_to': response_event_to,
+            'position': {
+                'latitude': latitude,
+                'longitude': longitude,
+            },
             'data': data
         }
         return self._rpush(INTEL_REQUEST, json.dumps(request))
