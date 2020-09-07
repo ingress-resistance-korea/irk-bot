@@ -11,4 +11,5 @@ def intel_result_to_dict(intel_result: Type[IntelResult]) -> dict:
         'timestamp': str(intel_result.timestamp),
         'url': intel_result.url,
         'error_message': intel_result.error_message,
+        'intel_url': intel_result.intel_url,
     }
