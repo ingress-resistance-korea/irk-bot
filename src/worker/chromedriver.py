@@ -1,10 +1,10 @@
 import os
 from time import sleep
-from datetime import datetime
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from PIL import Image
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 from src.configs.settings import GOOGLE_EMAIL, GOOGLE_PASSWORD, INGRESS_AGENT_NAME
 from src.configs.settings import CHROMEDRIVER_PATH, SCREENSHOT_DIR, SERVER_URL
@@ -12,7 +12,7 @@ from src.worker.constants import ACCOUNTS_GOOGLE_COM, INTEL_INGRESS_COM, EMAIL, 
     SUBMIT_APPROVE_ACCESS, LOGIN
 
 
-def setup_chrome():
+def setup_chrome() -> WebDriver:
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("headless")
     chrome_options.add_argument("--window-size=1920x1080")
@@ -51,7 +51,7 @@ class ChromeDriver:
             pass
         return file_url
 
-    def sign_in_google_from_intel_map(self):
+    def sign_in_google_from_intel_map(self) -> WebDriver:
         self.logger.info('Signing In Google From Intel Map...')
         url = 'https://%s' % INTEL_INGRESS_COM
         google_sign_in_url = None
