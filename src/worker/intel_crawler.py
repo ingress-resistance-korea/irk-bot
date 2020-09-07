@@ -27,6 +27,7 @@ class Crawler:
         self.result.error_message = '',
         self.result.address = ''
         self.result.url = ''
+        self.result.intel_url = ''
 
     def get_intel_screenshot(self, location: str) -> Type[IntelResult]:
         self._init()
