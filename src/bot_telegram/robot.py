@@ -8,6 +8,7 @@ from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, Callb
 from src.bot_telegram.commands.intel import get_intel_screenshot, get_intel_screenshot_by_position
 from src.bot_telegram.commands.help import get_documents
 from src.bot_telegram.commands.irk import get_irk_community_guide
+from src.bot_telegram.commands.link import get_link_distance
 from src.shared.constants import INTEL_RESPONSE_TELEGRAM
 
 from src.shared.logger import getLogger
@@ -15,6 +16,7 @@ from src.configs.settings import TELEGRAM_TOKEN
 from src.shared.parser import parse_intel_result
 from src.shared.queue import BotQueue
 from src.shared.type import IntelResult
+from src.shared.utils.calc_link_distance import calculate_link_distance
 
 
 class Robot(object):
@@ -34,7 +36,7 @@ class Robot(object):
         intel_handler = CommandHandler('intel', self.intel_command)
         self.updater.dispatcher.add_handler(intel_handler)
 
-        link_handler = CommandHandler('link', self.not_supported_command)
+        link_handler = CommandHandler('link', self.link_command)
         self.updater.dispatcher.add_handler(link_handler)
 
         irk_comm_handler = CommandHandler('irk', self.irk_comm_command)
@@ -74,6 +76,10 @@ class Robot(object):
 
     def help_command(self, update: Update, _: CallbackContext):
         get_documents(self.queue, update)
+
+    @staticmethod
+    def link_command(update: Update, context: CallbackContext):
+        get_link_distance(update, context)
 
     @staticmethod
     def not_supported_command(update: Update, context: CallbackContext):
