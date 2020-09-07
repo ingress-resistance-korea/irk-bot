@@ -45,7 +45,7 @@ class ChromeDriver:
         # rgb_im = cropped_image.convert('RGB')
         # rgb_im.save(jpg_file_path)
         # file_url = SERVER_URL + '/screenshots/' + filename + '.png'
-        file_url = './data/screenshots/' + filename + '.png'
+        file_url = SCREENSHOT_DIR + '/' + filename + '.png'
         # try:
         #     os.remove(png_file_path)
         # except Exception as e:

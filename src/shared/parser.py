@@ -11,5 +11,6 @@ def parse_intel_result(result: dict) -> Type[IntelResult]:
     parsed_result.address = result['address']
     parsed_result.error_message = result['error_message']
     parsed_result.timestamp = result['timestamp']
+    parsed_result.intel_url = result['intel_url']
     return parsed_result
 

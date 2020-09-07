@@ -11,3 +11,4 @@ class IntelResult:
     timestamp: datetime
     url: str
     error_message: str
+    intel_url: str

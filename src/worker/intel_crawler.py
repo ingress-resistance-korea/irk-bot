@@ -83,10 +83,10 @@ class Crawler:
         return lat, lng, width
 
     def _get_intel_map(self, lat, lng, z) -> bool:
-        url = INTEL_URL % (lat, lng, z)
-        logger.info(url)
+        self.result.intel_url = INTEL_URL % (lat, lng, z)
+        logger.info(self.result.intel_url)
         try:
-            self.chrome.driver.get(url)
+            self.chrome.driver.get(self.result.intel_url)
             time.sleep(1)
         except Exception as e:
             logger.info(e)
