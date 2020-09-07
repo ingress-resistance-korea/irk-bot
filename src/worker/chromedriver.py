@@ -25,7 +25,7 @@ def setup_chrome():
 
 class ChromeDriver:
     driver = None
-    origin_bounding_box = (20, 140, 1860, 880)
+    origin_bounding_box = (20, 151, 1845, 897)
 
     def __init__(self, logger):
         self.logger = logger
