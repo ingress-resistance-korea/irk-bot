@@ -8,7 +8,7 @@ def calculate_link_distance(resonators=None, mods=None):
 
     # reso count exception
     if reso_count != 8:
-        text = '`8개의 레조네티어를 넣어주세요`'
+        text = '`8개의 레조네이터를 넣어주세요`'
         return text
 
     total_reso_level = 0
