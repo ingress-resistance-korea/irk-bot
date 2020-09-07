@@ -4,14 +4,17 @@ from slack import WebClient
 
 from src.bot_slack.constants import CMD_INTEL
 from src.bot_slack.utils import slack_message_to_dict
-from src.shared.constants import INTEL_RESPONSE_SLACK
+from src.shared.constants import INTEL_RESPONSE_SLACK, INTEL_HELP_MESSAGE
 from src.shared.parser import parse_intel_result
 from src.shared.queue import BotQueue
 from src.bot_slack.type import SlackMessage
 
 
 def request_intel_screenshot(web_client: WebClient, queue: BotQueue, message: Type[SlackMessage]):
-    location = message.text.split(CMD_INTEL)[1]
+    if message.text == CMD_INTEL:
+        web_client.chat_postMessage(channel=message.channel, text=INTEL_HELP_MESSAGE)
+        return
+    location = message.text.split(CMD_INTEL + ' ')[1]
     queue.send_request_intel(
         event_id=message.client_msg_id,
         response_event_to=INTEL_RESPONSE_SLACK,
