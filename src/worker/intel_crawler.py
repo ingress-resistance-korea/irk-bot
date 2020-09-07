@@ -54,7 +54,7 @@ class Crawler:
         # Settings Zoom Level
         logger.info('[%s] Setting Zoom Level...' % (time.time() - self.result.start_time))
         z = self._get_zoom_level(width)
-        return self.get_intel_screenshot_by_position(latitude=lat, longitude=lng, z=z)
+        return self.get_intel_screenshot_by_position(latitude=lat, longitude=lng, z=z, initialized=True)
 
     @staticmethod
     def _get_zoom_level(width: float) -> int:
@@ -129,8 +129,9 @@ class Crawler:
             return False
         return True
 
-    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=15):
-        self._init()
+    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=15, initialized=None):
+        if not initialized:
+            self._init()
         # Getting Intel Map
         logger.info('[%s] Getting Intel Map...' % (time.time() - self.result.start_time))
         if not self._get_intel_map(lat=latitude, lng=longitude, z=z) or not self._check_intel_map_loaded():
