@@ -23,6 +23,7 @@ services:
     container_name: irk-bot-telegram
     volumes:
       - ./data/logs:/app/data/logs
+      - ./data/screenshots:/app/data/screenshots
     depends_on:
       - redis
       - nginx
@@ -36,6 +37,7 @@ services:
     container_name: irk-bot-slack
     volumes:
       - ./data/logs:/app/data/logs
+      - ./data/screenshots:/app/data/screenshots
     depends_on:
       - redis
       - nginx
