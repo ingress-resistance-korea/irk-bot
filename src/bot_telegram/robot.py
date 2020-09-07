@@ -1,9 +1,8 @@
 import time
-from typing import Type
 
 import telegram
 from telegram import Update, ParseMode
-from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext, Handler
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext
 
 from src.bot_telegram.commands.intel import get_intel_screenshot, get_intel_screenshot_by_position
 from src.bot_telegram.commands.help import get_documents
@@ -15,8 +14,6 @@ from src.shared.logger import getLogger
 from src.configs.settings import TELEGRAM_TOKEN
 from src.shared.parser import parse_intel_result
 from src.shared.queue import BotQueue
-from src.shared.type import IntelResult
-from src.shared.utils.calc_link_distance import calculate_link_distance
 
 
 class Robot(object):
@@ -95,7 +92,9 @@ class Robot(object):
         chat_id = response['data']['chat']['id']
         result = parse_intel_result(response['result'])
         if result.success:
-            text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
-            self.client.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
+            text = '%s\n`%s`' % (result.address, result.timestamp)
+            file = open(result.url, 'rb')
+            self.client.send_photo(chat_id=chat_id, photo=file, caption=text, parse_mode=ParseMode.MARKDOWN)
+            file.close()
         else:
             self.client.send_message(chat_id=chat_id, text=result.error_message)

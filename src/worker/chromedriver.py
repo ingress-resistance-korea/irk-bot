@@ -37,18 +37,20 @@ class ChromeDriver:
     def save_screenshot(self, filename):
         file_dir = SCREENSHOT_DIR
         png_file_path = file_dir + '/' + filename + '.png'
-        jpg_file_path = file_dir + '/' + filename + '.jpg'
+        # jpg_file_path = file_dir + '/' + filename + '.jpg'
         self.driver.save_screenshot(png_file_path)
         base_image = Image.open(png_file_path)
         cropped_image = base_image.crop(self.origin_bounding_box)
-        rgb_im = cropped_image.convert('RGB')
-        rgb_im.save(jpg_file_path)
-        file_url = SERVER_URL + '/screenshots/' + filename + '.jpg'
-        try:
-            os.remove(png_file_path)
-        except Exception as e:
-            print(e)
-            pass
+        cropped_image.save(png_file_path)
+        # rgb_im = cropped_image.convert('RGB')
+        # rgb_im.save(jpg_file_path)
+        # file_url = SERVER_URL + '/screenshots/' + filename + '.png'
+        file_url = './data/screenshots/' + filename + '.png'
+        # try:
+        #     os.remove(png_file_path)
+        # except Exception as e:
+        #     print(e)
+        #     pass
         return file_url
 
     def sign_in_google_from_intel_map(self) -> WebDriver:
