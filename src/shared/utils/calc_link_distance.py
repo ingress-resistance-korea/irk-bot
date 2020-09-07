@@ -31,13 +31,17 @@ def calculate_link_distance(resonators=None, mods=None):
             mods = ''.join(sorted(mods.upper(), key=lambda m: {'V': 1, 'S': 2, 'R': 3}[m]))
             power_of_mods = MOD_COMBINATIONS[mods]
         except:
-            text = '`모드가 잘못되었습니다.` (V,S,R 조합으로 최대 4개까지!)`'
+            text = '`모드가 잘못되었습니다` (V,S,R 조합으로 최대 4개까지!)'
             return text
     else:
         power_of_mods = 1
 
     # calc link distance
-    distance = round(160 * ((total_reso_level / 8.0) ** 4) * power_of_mods, 3)
+    try:
+        distance = round(160 * ((total_reso_level / 8.0) ** 4) * power_of_mods, 3)
+    except:
+        text = '`모드가 잘못되었습니다` (V,S,R 조합으로 최대 4개까지!)'
+        return text
 
     # make message
     if distance > 1000:
