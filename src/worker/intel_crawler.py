@@ -130,7 +130,7 @@ class Crawler:
             return False
         return True
 
-    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=15, initialized=None):
+    def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=17, initialized=None):
         if not initialized:
             self._init()
         # Getting Intel Map
