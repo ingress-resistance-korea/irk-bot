@@ -29,12 +29,18 @@ class Robot(object):
 
         help_handler = CommandHandler('help', self.help_command)
         self.updater.dispatcher.add_handler(help_handler)
+        
+        intel_short_handler = CommandHandler('i', self.intel_command)
+        self.updater.dispatcher.add_handler(intel_short_handler)
 
         intel_handler = CommandHandler('intel', self.intel_command)
         self.updater.dispatcher.add_handler(intel_handler)
 
         link_handler = CommandHandler('link', self.link_command)
         self.updater.dispatcher.add_handler(link_handler)
+
+        link_short_handler = CommandHandler('l', self.link_command)
+        self.updater.dispatcher.add_handler(link_short_handler)
 
         irk_comm_handler = CommandHandler('irk', self.irk_comm_command)
         self.updater.dispatcher.add_handler(irk_comm_handler)
