@@ -4,6 +4,7 @@ import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from src.bot_telegram.constantcs import INTEL_HELP_MESSAGE_TELEGRAM
 from src.bot_telegram.utils import get_data
 from src.shared.constants import INTEL_RESPONSE_TELEGRAM
 from src.shared.queue import BotQueue
@@ -11,6 +12,12 @@ from src.shared.queue import BotQueue
 
 def get_intel_screenshot(queue: BotQueue, update: Update, context: CallbackContext):
     location = ' '.join(context.args)
+
+    # send help information
+    if not len(location):
+        update.message.reply_markdown(INTEL_HELP_MESSAGE_TELEGRAM)
+        return
+
     data = get_data(update)
     queue.send_request_intel(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM, location=location,
                              data=data)

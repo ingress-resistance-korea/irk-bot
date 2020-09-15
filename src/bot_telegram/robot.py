@@ -1,20 +1,19 @@
 import time
-from typing import Type
 
 import telegram
 from telegram import Update, ParseMode
-from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext, Handler
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, CallbackContext
 
 from src.bot_telegram.commands.intel import get_intel_screenshot, get_intel_screenshot_by_position
 from src.bot_telegram.commands.help import get_documents
 from src.bot_telegram.commands.irk import get_irk_community_guide
+from src.bot_telegram.commands.link import get_link_distance
 from src.shared.constants import INTEL_RESPONSE_TELEGRAM
 
 from src.shared.logger import getLogger
 from src.configs.settings import TELEGRAM_TOKEN
 from src.shared.parser import parse_intel_result
 from src.shared.queue import BotQueue
-from src.shared.type import IntelResult
 
 
 class Robot(object):
@@ -34,7 +33,7 @@ class Robot(object):
         intel_handler = CommandHandler('intel', self.intel_command)
         self.updater.dispatcher.add_handler(intel_handler)
 
-        link_handler = CommandHandler('link', self.not_supported_command)
+        link_handler = CommandHandler('link', self.link_command)
         self.updater.dispatcher.add_handler(link_handler)
 
         irk_comm_handler = CommandHandler('irk', self.irk_comm_command)
@@ -76,6 +75,10 @@ class Robot(object):
         get_documents(self.queue, update)
 
     @staticmethod
+    def link_command(update: Update, context: CallbackContext):
+        get_link_distance(update, context)
+
+    @staticmethod
     def not_supported_command(update: Update, context: CallbackContext):
         update.message.reply_text("준비중인 기능입니다.")
 
@@ -89,7 +92,9 @@ class Robot(object):
         chat_id = response['data']['chat']['id']
         result = parse_intel_result(response['result'])
         if result.success:
-            text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.url)
-            self.client.send_message(chat_id=chat_id, text=text, parse_mode=ParseMode.MARKDOWN)
+            text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.intel_url)
+            file = open(result.url, 'rb')
+            self.client.send_photo(chat_id=chat_id, photo=file, caption=text, parse_mode=ParseMode.MARKDOWN)
+            file.close()
         else:
             self.client.send_message(chat_id=chat_id, text=result.error_message)

@@ -64,6 +64,7 @@ class WorkerQueue(Queue):
                 'address': result.address,
                 'error_message': result.error_message,
                 'timestamp': str(result.timestamp),
+                'intel_url': result.intel_url,
             },
             'data': data,
         }
