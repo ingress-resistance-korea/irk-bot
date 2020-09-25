@@ -1,5 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Type
+
+
+@dataclass
+class Location:
+    latitude: float
+    longitude: float
 
 
 @dataclass
@@ -12,3 +19,4 @@ class IntelResult:
     url: str
     error_message: str
     intel_url: str
+    location: Type[Location]

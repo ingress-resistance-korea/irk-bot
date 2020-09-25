@@ -2,7 +2,7 @@ import time
 import datetime
 from typing import Type
 
-from src.shared.type import IntelResult
+from src.shared.type import IntelResult, Location
 from src.worker.chromedriver import ChromeDriver
 from src.shared.logger import getLogger
 from src.worker.maps import get_location
@@ -18,9 +18,10 @@ logger = getLogger('worker')
 class Crawler:
     def __init__(self, chrome: ChromeDriver):
         self.result = IntelResult
+        self.location = Location
         self.chrome = chrome
 
-    def _init(self):
+    def _init(self, latitude=None, longitude=None):
         self.result.success = False
         self.result.timestamp = datetime.datetime.now()
         self.result.start_time = int(time.time())
@@ -28,14 +29,17 @@ class Crawler:
         self.result.address = ''
         self.result.url = ''
         self.result.intel_url = ''
+        self.location.latitude = latitude
+        self.location.longitude = longitude
+        self.result.location = self.location
 
-    def get_intel_screenshot(self, location: str) -> Type[IntelResult]:
+    def get_intel_screenshot(self, location_name: str) -> Type[IntelResult]:
         self._init()
-        logger.info(location)
+        logger.info(location_name)
 
         # get response
         logger.info('[%s] Getting Address...' % (time.time() - self.result.start_time))
-        address_data = get_location(location)
+        address_data = get_location(location_name)
         if not len(address_data['results']):
             self.result.error_message = ADDRESS_NOT_FOUND_ERROR
             return self.result
@@ -55,6 +59,10 @@ class Crawler:
         # Settings Zoom Level
         logger.info('[%s] Setting Zoom Level...' % (time.time() - self.result.start_time))
         z = self._get_zoom_level(width)
+
+        self.location.longitude = lng
+        self.location.latitude = lat
+        self.result.location = self.location
         return self.get_intel_screenshot_by_position(latitude=lat, longitude=lng, z=z, initialized=True)
 
     @staticmethod
@@ -132,7 +140,8 @@ class Crawler:
 
     def get_intel_screenshot_by_position(self, latitude: float, longitude: float, z=17, initialized=None):
         if not initialized:
-            self._init()
+            self._init(latitude, longitude)
+
         # Getting Intel Map
         logger.info('[%s] Getting Intel Map...' % (time.time() - self.result.start_time))
         if not self._get_intel_map(lat=latitude, lng=longitude, z=z) or not self._check_intel_map_loaded():

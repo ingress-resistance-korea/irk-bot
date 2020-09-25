@@ -19,13 +19,13 @@ def request_intel_screenshot(web_client: WebClient, queue: BotQueue, message: Ty
         event_id=message.client_msg_id,
         response_event_to=INTEL_RESPONSE_SLACK,
         location=location,
-        data=slack_message_to_dict(message),
+        extra=slack_message_to_dict(message),
     )
     web_client.chat_postMessage(channel=message.channel, text='잠시만 기다려주세요')
 
 
 def response_intel_screenshot(web_client: WebClient, response):
-    channel = response['data']['channel']
+    channel = response['extra']['slack_channel']
     result = parse_intel_result(response['result'])
     if result.success:
         text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.intel_url)

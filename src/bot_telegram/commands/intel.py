@@ -18,16 +18,16 @@ def get_intel_screenshot(queue: BotQueue, update: Update, context: CallbackConte
         update.message.reply_markdown(INTEL_HELP_MESSAGE_TELEGRAM)
         return
 
-    data = get_data(update)
+    extra = get_data(update)
     queue.send_request_intel(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM, location=location,
-                             data=data)
+                             extra=extra)
     update.message.reply_markdown('잠시만 기다려주세요')
 
 
 def get_intel_screenshot_by_position(queue: BotQueue, update: Update, context: CallbackContext):
     message = update.message
     latitude, longitude = (message.location.latitude, message.location.longitude)
-    data = get_data(update)
+    extra = get_data(update)
     queue.send_request_intel_by_position(event_id=str(uuid4()), response_event_to=INTEL_RESPONSE_TELEGRAM,
-                                         latitude=latitude, longitude=longitude, data=data)
+                                         latitude=latitude, longitude=longitude, extra=extra)
     update.message.reply_markdown('잠시만 기다려주세요')

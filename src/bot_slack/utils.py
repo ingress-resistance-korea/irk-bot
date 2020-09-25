@@ -21,14 +21,14 @@ def parse_slack_message(data: dict) -> Type[SlackMessage]:
 
 def slack_message_to_dict(message: Type[SlackMessage]) -> dict:
     return {
-        'channel': message.channel,
-        'text': message.text,
-        'user': message.user,
-        'client_msg_id': message.client_msg_id,
-        'event_ts': message.event_ts,
-        'source_team': message.source_team,
-        'suppress_notification': message.suppress_notification,
-        'team': message.team,
-        'ts': message.ts,
-        'user_team': message.user_team,
+        'slack_channel': message.channel,
+        'slack_text': message.text,
+        'slack_user': message.user,
+        'slack_client_msg_id': message.client_msg_id,
+        'slack_event_ts': message.event_ts,
+        'slack_source_team': message.source_team,
+        'slack_suppress_notification': message.suppress_notification,
+        'slack_team': message.team,
+        'slack_ts': message.ts,
+        'slack_user_team': message.user_team,
     }
