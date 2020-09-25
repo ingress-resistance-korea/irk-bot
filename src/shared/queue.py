@@ -22,26 +22,26 @@ class Queue:
 
 
 class BotQueue(Queue):
-    def send_request_intel(self, event_id: str, response_event_to: str, location: str, data: dict):
+    def send_request_intel(self, event_id: str, response_event_to: str, location: str, extra: dict):
         request = {
             'event_id': event_id,
             'request_type': IntelRequestType.LOCATION.value,
             'response_event_to': response_event_to,
-            'location': location,
-            'data': data
+            'location_name': location,
+            'extra': extra
         }
         return self._rpush(INTEL_REQUEST, json.dumps(request))
 
-    def send_request_intel_by_position(self, event_id: str, response_event_to: str, latitude: float, longitude: float, data: dict):
+    def send_request_intel_by_position(self, event_id: str, response_event_to: str, latitude: float, longitude: float, extra: dict):
         request = {
             'event_id': event_id,
             'request_type': IntelRequestType.POSITION.value,
             'response_event_to': response_event_to,
             'position': {
-                'latitude': latitude,
-                'longitude': longitude,
+                'lat': latitude,
+                'lon': longitude,
             },
-            'data': data
+            'extra': extra
         }
         return self._rpush(INTEL_REQUEST, json.dumps(request))
 
@@ -55,7 +55,7 @@ class WorkerQueue(Queue):
         data = self._lpop(INTEL_REQUEST)
         return json.loads(data) if data else data
 
-    def send_response_intel(self, event_id: str, response_event_to: str, result: Type[IntelResult], data):
+    def send_response_intel(self, event_id: str, response_event_to: str, result: Type[IntelResult], extra):
         data = {
             'event_id': event_id,
             'result': {
@@ -65,7 +65,11 @@ class WorkerQueue(Queue):
                 'error_message': result.error_message,
                 'timestamp': str(result.timestamp),
                 'intel_url': result.intel_url,
+                'location': {
+                    'lat': result.location.latitude,
+                    'lon': result.location.longitude,
+                }
             },
-            'data': data,
+            'extra': extra,
         }
         return self._rpush(response_event_to, json.dumps(data))

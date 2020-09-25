@@ -22,13 +22,14 @@ class Worker:
                 event_id = request['event_id']
                 response_event_to = request['response_event_to']
                 request_type = request['request_type']
-                data = request['data']
+                extra = request['extra']
                 if request_type == IntelRequestType.POSITION.value:
-                    latitude, longitude = request['position']['latitude'], request['position']['longitude']
+                    latitude, longitude = request['position']['lat'], request['position']['lon']
                     result = self.crawler.get_intel_screenshot_by_position(latitude=latitude, longitude=longitude)
                 elif request_type == IntelRequestType.LOCATION.value:
-                    location = request['location']
-                    result = self.crawler.get_intel_screenshot(location=location)
+                    location_name = request['location_name']
+
+                    result = self.crawler.get_intel_screenshot(location_name=location_name)
                 else:
                     raise ValueError
                 intel_response = json.dumps({
@@ -36,4 +37,4 @@ class Worker:
                     'result': intel_result_to_dict(result),
                 })
                 self.logger.info(intel_response)
-                self.queue.send_response_intel(event_id, response_event_to, result, data)
+                self.queue.send_response_intel(event_id, response_event_to, result, extra)
