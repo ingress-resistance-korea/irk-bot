@@ -44,14 +44,14 @@ class ChromeDriver:
         cropped_image.save(png_file_path)
         # rgb_im = cropped_image.convert('RGB')
         # rgb_im.save(jpg_file_path)
-        # file_url = SERVER_URL + '/screenshots/' + filename + '.png'
-        file_url = SCREENSHOT_DIR + '/' + filename + '.png'
+        file_url = SERVER_URL + '/screenshots/' + filename + '.png'
+        file_path = SCREENSHOT_DIR + '/' + filename + '.png'
         # try:
         #     os.remove(png_file_path)
         # except Exception as e:
         #     print(e)
         #     pass
-        return file_url
+        return file_url, file_path
 
     def sign_in_google_from_intel_map(self) -> WebDriver:
         self.logger.info('Signing In Google From Intel Map...')

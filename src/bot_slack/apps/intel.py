@@ -29,7 +29,7 @@ def response_intel_screenshot(web_client: WebClient, response):
     result = parse_intel_result(response['result'])
     if result.success:
         text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.intel_url)
-        web_client.files_upload(channels=channel, file=result.url, initial_comment=text)
+        web_client.files_upload(channels=channel, file=result.file_path, initial_comment=text)
         # web_client.chat_postMessage(channel=channel, text=text)
     else:
         web_client.chat_postMessage(channel=channel, text=result.error_message)
