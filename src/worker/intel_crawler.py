@@ -27,7 +27,8 @@ class Crawler:
         self.result.start_time = int(time.time())
         self.result.error_message = '',
         self.result.address = ''
-        self.result.url = ''
+        self.result.file_url = ''
+        self.result.file_path = ''
         self.result.intel_url = ''
         self.location.latitude = latitude
         self.location.longitude = longitude
@@ -131,8 +132,9 @@ class Crawler:
     def _save_screenshot(self):
         filename = self.result.timestamp.strftime('%Y%m%d%H%M%S')
         try:
-            file_url = self.chrome.save_screenshot(filename)
-            self.result.url = file_url
+            file_url, file_path = self.chrome.save_screenshot(filename)
+            self.result.file_url = file_url
+            self.result.file_path = file_path
         except Exception as e:
             logger.info(e)
             return False

@@ -60,7 +60,8 @@ class WorkerQueue(Queue):
             'event_id': event_id,
             'result': {
                 'success': result.success,
-                'url': result.url,
+                'file_url': result.file_url,
+                'file_path': result.file_path,
                 'address': result.address,
                 'error_message': result.error_message,
                 'timestamp': str(result.timestamp),

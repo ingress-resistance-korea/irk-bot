@@ -16,7 +16,8 @@ class IntelResult:
     address: str
     start_time: int
     timestamp: datetime
-    url: str
+    file_url: str
+    file_path: str
     error_message: str
     intel_url: str
     location: Type[Location]

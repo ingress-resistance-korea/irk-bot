@@ -102,7 +102,7 @@ class Robot(object):
         result = parse_intel_result(response['result'])
         if result.success:
             text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.intel_url)
-            file = open(result.url, 'rb')
+            file = open(result.file_path, 'rb')
             self.client.send_photo(chat_id=chat_id, photo=file, caption=text, parse_mode=ParseMode.MARKDOWN)
             file.close()
         else:

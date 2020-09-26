@@ -43,8 +43,6 @@ class Robot(object):
             response_intel_screenshot(self.web_client, response)
 
     async def _rtm_event_handler(self, data, **payload):
-        if data['subtype'] == 'bot_message':
-            return
         message = parse_slack_message(data)
         if data['text'].startswith(CMD_PREFIX):
             if message.text.startswith(CMD_INTEL):
