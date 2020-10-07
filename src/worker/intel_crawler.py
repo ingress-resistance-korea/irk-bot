@@ -13,6 +13,7 @@ from src.worker.constatns_error import ADDRESS_NOT_FOUND_ERROR, INVALID_LOCATION
     FAIL_TO_SAVE_SCREENSHOT_ERROR, TIME_EXCEED_ERROR
 
 logger = getLogger('worker')
+DISPLAY_NONE = 'display: none;'
 
 
 class Crawler:
@@ -125,7 +126,7 @@ class Crawler:
                 return False
 
             # Load Complete
-            if loading_msg.get_attribute("style") == 'display: none;':
+            if loading_msg.get_attribute("style") == DISPLAY_NONE:
                 return True
             time.sleep(1)
 
@@ -156,6 +157,8 @@ class Crawler:
             self.result.error_message = FAIL_TO_LOAD_INTEL_MAP_DURING_LOADING_ERROR
             return self.result
 
+        self._close_filter()
+
         # Saving Screenshot
         logger.info('[%s] Saving Screenshot...' % (time.time() - self.result.start_time))
         if not self._save_screenshot():
@@ -163,3 +166,8 @@ class Crawler:
             return self.result
         self.result.success = True
         return self.result
+
+    def _close_filter(self):
+        filter_container = self.chrome.driver.find_element_by_xpath('//*[@id="filters_container"]')
+        if filter_container.get_attribute('style') != DISPLAY_NONE:
+            self.chrome.driver.execute_script('document.getElementById("portal_filter_header").click()')
