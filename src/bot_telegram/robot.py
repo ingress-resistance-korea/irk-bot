@@ -99,11 +99,12 @@ class Robot(object):
 
     def send_intel_response(self, response):
         chat_id = response['extra']['telegram_chat']['id']
+        message_id = response['extra']['telegram_message']['message_id']
         result = parse_intel_result(response['result'])
         if result.success:
             text = '%s\n`%s`\n%s' % (result.address, result.timestamp, result.intel_url)
             file = open(result.file_path, 'rb')
-            self.client.send_photo(chat_id=chat_id, photo=file, caption=text, parse_mode=ParseMode.MARKDOWN)
+            self.client.send_photo(chat_id=chat_id, photo=file, caption=text, reply_to_message_id=message_id ,parse_mode=ParseMode.MARKDOWN)
             file.close()
         else:
-            self.client.send_message(chat_id=chat_id, text=result.error_message)
+            self.client.send_message(chat_id=chat_id, reply_to_message_id=message_id, text=result.error_message)
